@@ -7,9 +7,6 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- Google Translate Widget -->
-    <div id="google_translate_element" style="position: absolute; top: 10px; left: 10px; z-index: 1000;"></div>
-
     <!-- Auth Screen (Visible when logged out) -->
     <div id="auth-screen" class="screen">
         <div class="auth-box">
@@ -76,14 +73,6 @@
             </div>
         </div>
     </div>
-
-    <!-- Google Translate Script -->
-    <script type="text/javascript">
-        function googleTranslateElementInit() {
-            new google.translate.TranslateElement({pageLanguage: 'en'}, 'google_translate_element');
-        }
-    </script>
-    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
     <!-- Main App Logic -->
     <script type="module" src="app.js"></script>
