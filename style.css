@@ -154,3 +154,12 @@ main { padding: 30px 40px; max-width: 1200px; margin: 0 auto; flex: 1; width: 10
 }
 .delete-btn:hover { background-color: #fca5a5; color: #fff; }
 .modal-actions { display: flex; gap: 10px; justify-content: center; margin-top: 20px; }
+
+/* Guest / logged-in visibility */
+body:not(.logged-in) .user-only { display: none !important; }
+body.logged-in .guest-only { display: none !important; }
+.guest-notice {
+    background: var(--glass-bg); border: 1px solid var(--glass-border);
+    padding: 14px 20px; border-radius: 12px; font-weight: 600; color: var(--text-muted);
+}
+.empty-msg { color: var(--text-muted); font-weight: 600; }
