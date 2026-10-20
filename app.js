@@ -63,8 +63,9 @@ const navSubtopicDivider = document.getElementById('nav-subtopic-divider');
 
 
 // --- THEMES ---
-const THEMES = ['light', 'dark', 'vip'];
+const THEMES = ['light', 'dark', 'vip-light', 'vip-dark'];
 function applyTheme(t) {
+    if (t === 'vip') t = 'vip-dark'; // old saved value
     if (!THEMES.includes(t)) t = 'light';
     document.documentElement.dataset.theme = t;
     try { localStorage.setItem('hv-theme', t); } catch (e) {}
@@ -73,17 +74,25 @@ function applyTheme(t) {
 try { applyTheme(localStorage.getItem('hv-theme')); } catch (e) { applyTheme('light'); }
 
 function markSelected(containerId, theme) {
-    document.querySelectorAll(`#${containerId} .theme-option`).forEach(b =>
-        b.classList.toggle('selected', b.dataset.theme === theme));
+    if (theme === 'vip') theme = 'vip-dark';
+    const root = document.getElementById(containerId);
+    const isVip = theme.startsWith('vip');
+    root.querySelectorAll('[data-theme]').forEach(b => b.classList.toggle('selected', b.dataset.theme === theme));
+    root.querySelector('[data-group="vip"]').classList.toggle('selected', isVip);
+    if (isVip) root.querySelector('.vip-menu').classList.remove('hidden');
+    else root.querySelector('.vip-menu').classList.add('hidden');
 }
 function getSelected(containerId) {
-    const b = document.querySelector(`#${containerId} .theme-option.selected`);
+    const b = document.querySelector(`#${containerId} [data-theme].selected`);
     return b ? b.dataset.theme : 'light';
 }
-// clicking an option previews it live
 ['setup-themes', 'settings-themes'].forEach(id => {
-    document.querySelectorAll(`#${id} .theme-option`).forEach(btn =>
+    const root = document.getElementById(id);
+    root.querySelectorAll('[data-theme]').forEach(btn =>
         btn.addEventListener('click', () => { markSelected(id, btn.dataset.theme); applyTheme(btn.dataset.theme); }));
+    // VIP button just opens/closes the submenu
+    root.querySelector('[data-group="vip"]').addEventListener('click', () =>
+        root.querySelector('.vip-menu').classList.toggle('hidden'));
 });
 markSelected('setup-themes', document.documentElement.dataset.theme);
 
