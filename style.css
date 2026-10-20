@@ -292,3 +292,7 @@ body.logged-in .guest-only { display: none !important; }
 .like-btn:hover { transform: scale(1.08); background: var(--icon-hover); }
 .like-btn:disabled { opacity: 0.6; cursor: wait; }
 .like-btn.liked { background: var(--danger-bg); color: #ef4444; }
+
+/* Logo */
+.header-left h1 { display: flex; align-items: center; gap: 8px; }
+.logo-img { width: 30px; height: 30px; object-fit: contain; }
