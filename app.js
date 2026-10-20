@@ -1,6 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js";
 import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js";
-import { getFirestore, collection, addDoc, deleteDoc, doc, setDoc, getDoc, query, where, onSnapshot as rawOnSnapshot } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js";
+import { getFirestore, collection, addDoc, deleteDoc, doc, setDoc, getDoc, query, where, updateDoc, arrayUnion, arrayRemove, onSnapshot as rawOnSnapshot } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBq4v6W1igek7oh8cTS0M1mgBGrPXrgsl0",
@@ -253,7 +253,7 @@ createInfocardForm.addEventListener('submit', async (e) => {
     const input = document.getElementById('new-infocard-content');
     if (!auth.currentUser || !input.value.trim() || !currentSubtopicId) return;
     await addDoc(collection(db, "infocards"), {
-        content: input.value.trim(), subtopicId: currentSubtopicId,
+        content: input.value.trim(), subtopicId: currentSubtopicId, likes: [],
         createdBy: auth.currentUser.uid, creatorName: currentUserData.username, createdAt: Date.now()
     });
     input.value = '';
@@ -324,14 +324,36 @@ function loadInfoCards(subtopicId) {
         docs.forEach(card => {
             const div = document.createElement('div');
             div.className = 'info-card';
-            div.innerHTML = `<p>${esc(card.content)}</p><span class="meta">— ${esc(card.creatorName)}</span><br>`;
-            
-            if (auth.currentUser && card.createdBy === auth.currentUser.uid) {
+            div.innerHTML = `<p>${esc(card.content)}</p><span class="meta">— ${esc(card.creatorName)}</span>`;
+
+            const uid = auth.currentUser ? auth.currentUser.uid : null;
+            const likes = Array.isArray(card.likes) ? card.likes : [];
+            const liked = uid && likes.includes(uid);
+
+            const actions = document.createElement('div');
+            actions.className = 'card-actions';
+
+            const likeBtn = document.createElement('button');
+            likeBtn.className = 'like-btn' + (liked ? ' liked' : '');
+            likeBtn.innerText = `${liked ? '♥' : '♡'} ${likes.length}`;
+            likeBtn.title = uid ? (liked ? 'Unlike' : 'Like') : 'Log in to like';
+            likeBtn.onclick = async () => {
+                if (!uid) return alert("Log in to like cards!");
+                likeBtn.disabled = true;
+                try {
+                    await updateDoc(doc(db, "infocards", card.id), { likes: liked ? arrayRemove(uid) : arrayUnion(uid) });
+                } catch (e) { alert("Could not update like: " + e.message); }
+                likeBtn.disabled = false;
+            };
+            actions.appendChild(likeBtn);
+
+            if (uid && card.createdBy === uid) {
                 const btn = document.createElement('button');
                 btn.className = 'delete-btn'; btn.innerText = 'Delete Card';
                 btn.onclick = async () => { if(confirm("Delete this Info-Card?")) await deleteDoc(doc(db, "infocards", card.id)); };
-                div.appendChild(btn);
+                actions.appendChild(btn);
             }
+            div.appendChild(actions);
             infocardsList.appendChild(div);
         });
     });
