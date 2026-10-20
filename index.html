@@ -14,8 +14,12 @@
             <h2>Welcome to HistoryVault!</h2>
             <p>Customize your profile to get started.</p>
             <input type="text" id="setup-username" placeholder="Choose a username..." class="modern-input">
-            <label for="setup-color" class="color-label">Your Theme Color:</label>
-            <input type="color" id="setup-color" value="#6366f1" class="modern-color-picker">
+            <label class="color-label">Theme:</label>
+            <div class="theme-options" id="setup-themes">
+                <button type="button" class="theme-option" data-theme="light"><span class="theme-swatch swatch-light"></span>☀️ Light</button>
+                <button type="button" class="theme-option" data-theme="dark"><span class="theme-swatch swatch-dark"></span>🌙 Dark</button>
+                <button type="button" class="theme-option" data-theme="vip"><span class="theme-swatch swatch-vip"></span>👑 VIP<span class="theme-tag">FREE FOR NOW</span></button>
+            </div>
             <button id="setup-save-btn" class="primary-btn">Complete Setup</button>
         </div>
     </div>
@@ -92,8 +96,12 @@
             <h2>Settings</h2>
             <label>Username:</label>
             <input type="text" id="settings-username" class="modern-input">
-            <label class="color-label">Theme Color:</label>
-            <input type="color" id="settings-color" class="modern-color-picker">
+            <label class="color-label">Theme:</label>
+            <div class="theme-options" id="settings-themes">
+                <button type="button" class="theme-option" data-theme="light"><span class="theme-swatch swatch-light"></span>☀️ Light</button>
+                <button type="button" class="theme-option" data-theme="dark"><span class="theme-swatch swatch-dark"></span>🌙 Dark</button>
+                <button type="button" class="theme-option" data-theme="vip"><span class="theme-swatch swatch-vip"></span>👑 VIP<span class="theme-tag">FREE FOR NOW</span></button>
+            </div>
             <div class="modal-actions">
                 <button id="settings-save-btn" class="primary-btn">Save Changes</button>
                 <button id="settings-cancel-btn" class="secondary-btn">Cancel</button>
