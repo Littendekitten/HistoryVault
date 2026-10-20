@@ -1,6 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js";
 import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js";
-import { getFirestore, collection, addDoc, deleteDoc, doc, onSnapshot, setDoc, getDoc, query, where } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js";
+import { getFirestore, collection, addDoc, deleteDoc, doc, setDoc, getDoc, query, where, onSnapshot as rawOnSnapshot } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBq4v6W1igek7oh8cTS0M1mgBGrPXrgsl0",
@@ -15,6 +15,23 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
+
+// Wrapper that shows Firestore errors on screen instead of failing silently
+function onSnapshot(q, cb) {
+    return rawOnSnapshot(q, cb, (err) => {
+        console.error(err);
+        let box = document.getElementById('db-error');
+        if (!box) {
+            box = document.createElement('div');
+            box.id = 'db-error';
+            box.className = 'guest-notice';
+            box.style.cssText = 'margin-bottom:20px;color:#b91c1c;';
+            document.querySelector('main').prepend(box);
+        }
+        box.textContent = 'Could not load data: ' + err.message + ' (check your Firestore rules are published)';
+    });
+}
+
 
 // DOM Elements
 const appScreen = document.getElementById('app-screen');
