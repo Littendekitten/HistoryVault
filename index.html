@@ -15,10 +15,16 @@
             <p>Customize your profile to get started.</p>
             <input type="text" id="setup-username" placeholder="Choose a username..." class="modern-input">
             <label class="color-label">Theme:</label>
-            <div class="theme-options" id="setup-themes">
-                <button type="button" class="theme-option" data-theme="light"><span class="theme-swatch swatch-light"></span>☀️ Light</button>
-                <button type="button" class="theme-option" data-theme="dark"><span class="theme-swatch swatch-dark"></span>🌙 Dark</button>
-                <button type="button" class="theme-option" data-theme="vip"><span class="theme-swatch swatch-vip"></span>👑 VIP<span class="theme-tag">FREE FOR NOW</span></button>
+            <div class="theme-picker" id="setup-themes">
+                <div class="theme-options">
+                    <button type="button" class="theme-option" data-theme="light"><span class="theme-swatch swatch-light"></span>☀️ Light</button>
+                    <button type="button" class="theme-option" data-theme="dark"><span class="theme-swatch swatch-dark"></span>🌙 Dark</button>
+                    <button type="button" class="theme-option" data-group="vip"><span class="theme-swatch swatch-vip"></span>👑 VIP ▾<span class="theme-tag">FREE FOR NOW</span></button>
+                </div>
+                <div class="vip-menu hidden">
+                    <button type="button" class="theme-option" data-theme="vip-light"><span class="theme-swatch swatch-vip-light"></span>Light VIP</button>
+                    <button type="button" class="theme-option" data-theme="vip-dark"><span class="theme-swatch swatch-vip-dark"></span>Dark VIP</button>
+                </div>
             </div>
             <button id="setup-save-btn" class="primary-btn">Complete Setup</button>
         </div>
@@ -97,10 +103,16 @@
             <label>Username:</label>
             <input type="text" id="settings-username" class="modern-input">
             <label class="color-label">Theme:</label>
-            <div class="theme-options" id="settings-themes">
-                <button type="button" class="theme-option" data-theme="light"><span class="theme-swatch swatch-light"></span>☀️ Light</button>
-                <button type="button" class="theme-option" data-theme="dark"><span class="theme-swatch swatch-dark"></span>🌙 Dark</button>
-                <button type="button" class="theme-option" data-theme="vip"><span class="theme-swatch swatch-vip"></span>👑 VIP<span class="theme-tag">FREE FOR NOW</span></button>
+            <div class="theme-picker" id="settings-themes">
+                <div class="theme-options">
+                    <button type="button" class="theme-option" data-theme="light"><span class="theme-swatch swatch-light"></span>☀️ Light</button>
+                    <button type="button" class="theme-option" data-theme="dark"><span class="theme-swatch swatch-dark"></span>🌙 Dark</button>
+                    <button type="button" class="theme-option" data-group="vip"><span class="theme-swatch swatch-vip"></span>👑 VIP ▾<span class="theme-tag">FREE FOR NOW</span></button>
+                </div>
+                <div class="vip-menu hidden">
+                    <button type="button" class="theme-option" data-theme="vip-light"><span class="theme-swatch swatch-vip-light"></span>Light VIP</button>
+                    <button type="button" class="theme-option" data-theme="vip-dark"><span class="theme-swatch swatch-vip-dark"></span>Dark VIP</button>
+                </div>
             </div>
             <div class="modal-actions">
                 <button id="settings-save-btn" class="primary-btn">Save Changes</button>
