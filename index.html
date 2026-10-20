@@ -8,16 +8,6 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- Auth Screen -->
-    <div id="auth-screen" class="screen">
-        <div class="glass-box auth-box">
-            <h1>🏛️ HistoryVault</h1>
-            <p>The Collaborative History Wiki</p>
-            <span class="credit">By KitaCat</span>
-            <button id="login-btn" class="primary-btn mt-20">Login / Sign Up with Google</button>
-        </div>
-    </div>
-
     <!-- First Time Setup Screen -->
     <div id="setup-screen" class="screen hidden">
         <div class="glass-box modal-box">
@@ -30,21 +20,21 @@
         </div>
     </div>
 
-    <!-- Main App Screen -->
-    <div id="app-screen" class="screen hidden">
+    <!-- Main App Screen (visible to everyone) -->
+    <div id="app-screen" class="screen">
         <header class="glass-header">
             <div class="header-left">
                 <h1>🏛️ HistoryVault</h1>
             </div>
             <div class="header-right">
-                <span id="user-display"></span>
-                <button id="settings-btn" class="icon-btn">⚙️</button>
-                <button id="logout-btn" class="icon-btn">🚪</button>
+                <span id="user-display" class="user-only"></span>
+                <button id="settings-btn" class="icon-btn user-only">⚙️</button>
+                <button id="logout-btn" class="icon-btn user-only">🚪</button>
+                <button id="login-btn" class="primary-btn guest-only">Login / Sign Up with Google</button>
             </div>
         </header>
 
         <main>
-            <!-- Navigation Breadcrumbs -->
             <nav id="breadcrumbs" class="breadcrumbs hidden">
                 <span id="nav-home" class="nav-link">Topics</span>
                 <span id="nav-topic-divider" class="hidden"> / </span>
@@ -57,10 +47,11 @@
             <section id="topics-view" class="view-section">
                 <div class="section-header">
                     <h2>📚 All Topics</h2>
-                    <form id="create-topic-form" class="modern-form">
+                    <form id="create-topic-form" class="modern-form user-only">
                         <input type="text" id="new-topic-name" placeholder="Create a new topic..." required class="modern-input">
                         <button type="submit" class="primary-btn">+</button>
                     </form>
+                    <div class="guest-notice guest-only">Log in to create topics</div>
                 </div>
                 <div id="topics-list" class="grid"></div>
             </section>
@@ -69,10 +60,11 @@
             <section id="subtopics-view" class="view-section hidden">
                 <div class="section-header">
                     <h2 id="subtopics-title">Subtopics</h2>
-                    <form id="create-subtopic-form" class="modern-form">
+                    <form id="create-subtopic-form" class="modern-form user-only">
                         <input type="text" id="new-subtopic-name" placeholder="Create a subtopic..." required class="modern-input">
                         <button type="submit" class="primary-btn">+</button>
                     </form>
+                    <div class="guest-notice guest-only">Log in to create subtopics</div>
                 </div>
                 <div id="subtopics-list" class="grid"></div>
             </section>
@@ -82,12 +74,13 @@
                 <div class="section-header">
                     <h2 id="infocards-title">Info-Cards</h2>
                 </div>
-                <div class="create-card-container glass-box">
+                <div class="create-card-container glass-box user-only">
                     <form id="create-infocard-form">
                         <textarea id="new-infocard-content" placeholder="Share a historical fact, lore, or information..." required class="modern-textarea"></textarea>
                         <button type="submit" class="primary-btn mt-10">Post Info-Card</button>
                     </form>
                 </div>
+                <div class="guest-notice guest-only">Log in to post Info-Cards</div>
                 <div id="infocards-list" class="cards-grid"></div>
             </section>
         </main>
@@ -108,7 +101,6 @@
         </div>
     </div>
 
-    <!-- Main App Logic -->
     <script type="module" src="app.js"></script>
 </body>
 </html>
