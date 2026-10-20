@@ -61,6 +61,32 @@ const navTopicDivider = document.getElementById('nav-topic-divider');
 const navSubtopic = document.getElementById('nav-subtopic');
 const navSubtopicDivider = document.getElementById('nav-subtopic-divider');
 
+
+// --- THEMES ---
+const THEMES = ['light', 'dark', 'vip'];
+function applyTheme(t) {
+    if (!THEMES.includes(t)) t = 'light';
+    document.documentElement.dataset.theme = t;
+    try { localStorage.setItem('hv-theme', t); } catch (e) {}
+    return t;
+}
+try { applyTheme(localStorage.getItem('hv-theme')); } catch (e) { applyTheme('light'); }
+
+function markSelected(containerId, theme) {
+    document.querySelectorAll(`#${containerId} .theme-option`).forEach(b =>
+        b.classList.toggle('selected', b.dataset.theme === theme));
+}
+function getSelected(containerId) {
+    const b = document.querySelector(`#${containerId} .theme-option.selected`);
+    return b ? b.dataset.theme : 'light';
+}
+// clicking an option previews it live
+['setup-themes', 'settings-themes'].forEach(id => {
+    document.querySelectorAll(`#${id} .theme-option`).forEach(btn =>
+        btn.addEventListener('click', () => { markSelected(id, btn.dataset.theme); applyTheme(btn.dataset.theme); }));
+});
+markSelected('setup-themes', document.documentElement.dataset.theme);
+
 let currentUserData = null;
 let currentTopicId = null;
 let currentSubtopicId = null;
@@ -73,7 +99,6 @@ document.getElementById('login-btn').addEventListener('click', async () => {
 });
 document.getElementById('logout-btn').addEventListener('click', () => signOut(auth));
 
-const DEFAULT_COLOR = '#6366f1';
 let appStarted = false;
 
 function esc(s) {
@@ -102,7 +127,7 @@ onAuthStateChanged(auth, async (user) => {
         currentUserData = null;
         document.body.classList.remove('logged-in');
         setupScreen.classList.add('hidden');
-        document.documentElement.style.setProperty('--theme-color', DEFAULT_COLOR);
+        applyTheme('light');
     }
     if (!appStarted) { appStarted = true; navigateToHome(); }
     else refreshCurrentView(); // re-render so delete buttons match the user
@@ -111,9 +136,9 @@ onAuthStateChanged(auth, async (user) => {
 // --- SETTINGS & SETUP ---
 document.getElementById('setup-save-btn').addEventListener('click', async () => {
     const username = document.getElementById('setup-username').value.trim();
-    const color = document.getElementById('setup-color').value;
+    const theme = getSelected('setup-themes');
     if (!username) return alert("Please enter a username!");
-    currentUserData = { username, color, email: auth.currentUser.email };
+    currentUserData = { username, theme, email: auth.currentUser.email };
     await setDoc(doc(db, "users", auth.currentUser.uid), currentUserData);
     setupScreen.classList.add('hidden');
     applyUserSettings();
@@ -124,13 +149,16 @@ document.getElementById('setup-save-btn').addEventListener('click', async () => 
 
 document.getElementById('settings-btn').addEventListener('click', () => {
     document.getElementById('settings-username').value = currentUserData.username;
-    document.getElementById('settings-color').value = currentUserData.color;
+    markSelected('settings-themes', currentUserData.theme || 'light');
     document.getElementById('settings-modal').classList.remove('hidden');
 });
-document.getElementById('settings-cancel-btn').addEventListener('click', () => document.getElementById('settings-modal').classList.add('hidden'));
+document.getElementById('settings-cancel-btn').addEventListener('click', () => {
+    applyTheme(currentUserData.theme || 'light');
+    document.getElementById('settings-modal').classList.add('hidden');
+});
 document.getElementById('settings-save-btn').addEventListener('click', async () => {
     currentUserData.username = document.getElementById('settings-username').value.trim();
-    currentUserData.color = document.getElementById('settings-color').value;
+    currentUserData.theme = getSelected('settings-themes');
     await setDoc(doc(db, "users", auth.currentUser.uid), currentUserData, { merge: true });
     applyUserSettings();
     userDisplay.innerText = currentUserData.username;
@@ -138,7 +166,7 @@ document.getElementById('settings-save-btn').addEventListener('click', async () 
 });
 
 function applyUserSettings() {
-    document.documentElement.style.setProperty('--theme-color', currentUserData.color);
+    applyTheme(currentUserData.theme || 'light');
 }
 
 // --- NAVIGATION ---
