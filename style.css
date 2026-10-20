@@ -281,3 +281,14 @@ body.logged-in .guest-only { display: none !important; }
     main { padding: 20px 16px; }
     .header-right { gap: 8px; }
 }
+
+/* Likes */
+.card-actions { display: flex; justify-content: space-between; align-items: center; margin-top: 15px; gap: 10px; }
+.card-actions .delete-btn { margin-top: 0; }
+.like-btn {
+    background: var(--icon-bg); color: var(--text-main); border: none; border-radius: 999px;
+    padding: 8px 16px; font-weight: 600; font-size: 0.95rem; cursor: pointer; transition: 0.2s;
+}
+.like-btn:hover { transform: scale(1.08); background: var(--icon-hover); }
+.like-btn:disabled { opacity: 0.6; cursor: wait; }
+.like-btn.liked { background: var(--danger-bg); color: #ef4444; }
