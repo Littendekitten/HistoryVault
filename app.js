@@ -17,7 +17,6 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 
 // DOM Elements
-const authScreen = document.getElementById('auth-screen');
 const appScreen = document.getElementById('app-screen');
 const setupScreen = document.getElementById('setup-screen');
 const userDisplay = document.getElementById('user-display');
@@ -57,25 +56,39 @@ document.getElementById('login-btn').addEventListener('click', async () => {
 });
 document.getElementById('logout-btn').addEventListener('click', () => signOut(auth));
 
+const DEFAULT_COLOR = '#6366f1';
+let appStarted = false;
+
+function esc(s) {
+    return String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+function refreshCurrentView() {
+    if (currentSubtopicId) loadInfoCards(currentSubtopicId);
+    else if (currentTopicId) loadSubtopics(currentTopicId);
+    else loadTopics();
+}
+
 onAuthStateChanged(auth, async (user) => {
     if (user) {
-        authScreen.classList.add('hidden');
         const userSnap = await getDoc(doc(db, "users", user.uid));
         if (userSnap.exists()) {
             currentUserData = userSnap.data();
             applyUserSettings();
-            showApp();
+            userDisplay.innerText = currentUserData.username;
+            document.body.classList.add('logged-in');
         } else {
             setupScreen.classList.remove('hidden');
+            return; // finish after setup
         }
     } else {
-        authScreen.classList.remove('hidden');
-        appScreen.classList.add('hidden');
+        currentUserData = null;
+        document.body.classList.remove('logged-in');
         setupScreen.classList.add('hidden');
-        if(unsubTopics) unsubTopics();
-        if(unsubSubtopics) unsubSubtopics();
-        if(unsubInfocards) unsubInfocards();
+        document.documentElement.style.setProperty('--theme-color', DEFAULT_COLOR);
     }
+    if (!appStarted) { appStarted = true; navigateToHome(); }
+    else refreshCurrentView(); // re-render so delete buttons match the user
 });
 
 // --- SETTINGS & SETUP ---
@@ -87,7 +100,9 @@ document.getElementById('setup-save-btn').addEventListener('click', async () => 
     await setDoc(doc(db, "users", auth.currentUser.uid), currentUserData);
     setupScreen.classList.add('hidden');
     applyUserSettings();
-    showApp();
+    userDisplay.innerText = currentUserData.username;
+    document.body.classList.add('logged-in');
+    if (!appStarted) { appStarted = true; navigateToHome(); } else refreshCurrentView();
 });
 
 document.getElementById('settings-btn').addEventListener('click', () => {
@@ -107,12 +122,6 @@ document.getElementById('settings-save-btn').addEventListener('click', async () 
 
 function applyUserSettings() {
     document.documentElement.style.setProperty('--theme-color', currentUserData.color);
-}
-
-function showApp() {
-    appScreen.classList.remove('hidden');
-    userDisplay.innerText = currentUserData.username;
-    navigateToHome();
 }
 
 // --- NAVIGATION ---
@@ -166,7 +175,7 @@ function navigateToSubtopic(subtopicId, subtopicName) {
 createTopicForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     const input = document.getElementById('new-topic-name');
-    if (!input.value.trim()) return;
+    if (!auth.currentUser || !input.value.trim()) return;
     await addDoc(collection(db, "topics"), {
         name: input.value.trim(), createdBy: auth.currentUser.uid,
         creatorName: currentUserData.username, createdAt: Date.now()
@@ -177,7 +186,7 @@ createTopicForm.addEventListener('submit', async (e) => {
 createSubtopicForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     const input = document.getElementById('new-subtopic-name');
-    if (!input.value.trim() || !currentTopicId) return;
+    if (!auth.currentUser || !input.value.trim() || !currentTopicId) return;
     await addDoc(collection(db, "subtopics"), {
         name: input.value.trim(), topicId: currentTopicId,
         createdBy: auth.currentUser.uid, creatorName: currentUserData.username, createdAt: Date.now()
@@ -188,7 +197,7 @@ createSubtopicForm.addEventListener('submit', async (e) => {
 createInfocardForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     const input = document.getElementById('new-infocard-content');
-    if (!input.value.trim() || !currentSubtopicId) return;
+    if (!auth.currentUser || !input.value.trim() || !currentSubtopicId) return;
     await addDoc(collection(db, "infocards"), {
         content: input.value.trim(), subtopicId: currentSubtopicId,
         createdBy: auth.currentUser.uid, creatorName: currentUserData.username, createdAt: Date.now()
@@ -209,10 +218,10 @@ function loadTopics() {
         docs.forEach(topic => {
             const div = document.createElement('div');
             div.className = 'item-card';
-            div.innerHTML = `<div><h3>${topic.name}</h3><span class="meta">By ${topic.creatorName}</span></div>`;
+            div.innerHTML = `<div><h3>${esc(topic.name)}</h3><span class="meta">By ${esc(topic.creatorName)}</span></div>`;
             div.onclick = (e) => { if(!e.target.classList.contains('delete-btn')) navigateToTopic(topic.id, topic.name); };
             
-            if (topic.createdBy === auth.currentUser.uid) {
+            if (auth.currentUser && topic.createdBy === auth.currentUser.uid) {
                 const btn = document.createElement('button');
                 btn.className = 'delete-btn'; btn.innerText = 'Delete';
                 btn.onclick = async () => { if(confirm("Delete this topic?")) await deleteDoc(doc(db, "topics", topic.id)); };
@@ -235,10 +244,10 @@ function loadSubtopics(topicId) {
         docs.forEach(sub => {
             const div = document.createElement('div');
             div.className = 'item-card';
-            div.innerHTML = `<div><h3>${sub.name}</h3><span class="meta">By ${sub.creatorName}</span></div>`;
+            div.innerHTML = `<div><h3>${esc(sub.name)}</h3><span class="meta">By ${esc(sub.creatorName)}</span></div>`;
             div.onclick = (e) => { if(!e.target.classList.contains('delete-btn')) navigateToSubtopic(sub.id, sub.name); };
             
-            if (sub.createdBy === auth.currentUser.uid) {
+            if (auth.currentUser && sub.createdBy === auth.currentUser.uid) {
                 const btn = document.createElement('button');
                 btn.className = 'delete-btn'; btn.innerText = 'Delete';
                 btn.onclick = async () => { if(confirm("Delete this subtopic?")) await deleteDoc(doc(db, "subtopics", sub.id)); };
@@ -261,9 +270,9 @@ function loadInfoCards(subtopicId) {
         docs.forEach(card => {
             const div = document.createElement('div');
             div.className = 'info-card';
-            div.innerHTML = `<p>${card.content}</p><span class="meta">— ${card.creatorName}</span><br>`;
+            div.innerHTML = `<p>${esc(card.content)}</p><span class="meta">— ${esc(card.creatorName)}</span><br>`;
             
-            if (card.createdBy === auth.currentUser.uid) {
+            if (auth.currentUser && card.createdBy === auth.currentUser.uid) {
                 const btn = document.createElement('button');
                 btn.className = 'delete-btn'; btn.innerText = 'Delete Card';
                 btn.onclick = async () => { if(confirm("Delete this Info-Card?")) await deleteDoc(doc(db, "infocards", card.id)); };
