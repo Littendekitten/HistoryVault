@@ -1,1 +1,277 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Geschiedenis begrippen – hoofdstuk 1 t/m 3</title>
+<style>
+:root{--bg:#eef2f8;--panel:#fff;--ink:#16213a;--mut:#5b6784;--line:#d3dbe9;--acc:#2f55d4;--accbg:#e2e9fc;--ok:#13794f;--okbg:#dcf3e8;--bad:#b8322a;--badbg:#fbe3e0;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1626;--panel:#18223a;--ink:#e8edf8;--mut:#98a4c2;--line:#2c3858;--acc:#7f9cf5;--accbg:#233157;--ok:#52d39a;--okbg:#123a2b;--bad:#ff8a80;--badbg:#42201f}}
+:root[data-theme="dark"]{--bg:#0f1626;--panel:#18223a;--ink:#e8edf8;--mut:#98a4c2;--line:#2c3858;--acc:#7f9cf5;--accbg:#233157;--ok:#52d39a;--okbg:#123a2b;--bad:#ff8a80;--badbg:#42201f}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.55 Georgia,"Iowan Old Style","Times New Roman",serif}
+button,input{font:inherit;color:inherit}
+main{max-width:720px;margin:0 auto;padding:20px 16px 60px}
+h1{font-size:1.7rem;line-height:1.2;margin:.2em 0 .1em}
+.sub{color:var(--mut);margin:0 0 18px;font-size:.95rem}
+.bar{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 14px}
+.tabs{border-bottom:2px solid var(--line);margin-bottom:16px}
+.tab{background:none;border:0;padding:10px 14px;cursor:pointer;color:var(--mut);border-bottom:3px solid transparent;margin-bottom:-2px;font-weight:700}
+.tab[aria-selected=true]{color:var(--acc);border-color:var(--acc)}
+.chip{border:1.5px solid var(--line);background:var(--panel);border-radius:99px;padding:6px 14px;cursor:pointer;font-size:.92rem}
+.chip[aria-pressed=true]{background:var(--acc);border-color:var(--acc);color:var(--bg)}
+:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+input[type=search]{width:100%;padding:11px 14px;border:1.5px solid var(--line);border-radius:8px;background:var(--panel);margin-bottom:12px}
+.row{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:12px 14px;margin-bottom:8px;width:100%;text-align:left;display:block;cursor:default}
+.row b{font-size:1.05rem}
+.row .d{color:var(--ink);margin-top:2px}
+.row.hide{cursor:pointer}.row.hide .d{filter:blur(7px);user-select:none}.row.hide.open .d{filter:none;user-select:auto}
+.own{font-size:.8rem;color:var(--mut);font-style:italic;margin-left:6px}
+.ch{font-size:.8rem;color:var(--mut);float:right}
+.btn{background:var(--acc);color:var(--bg);border:0;border-radius:8px;padding:12px 20px;font-weight:700;cursor:pointer}
+.btn.alt{background:var(--accbg);color:var(--acc)}
+.q{font-size:1.2rem;line-height:1.4;margin:10px 0 16px}
+.opt{display:flex;gap:12px;width:100%;text-align:left;background:var(--panel);border:1.5px solid var(--line);border-radius:8px;padding:12px 14px;margin-bottom:10px;cursor:pointer}
+.opt i{font-style:normal;font-weight:700;color:var(--acc);min-width:1.2em}
+.opt.ok{background:var(--okbg);border-color:var(--ok)}.opt.no{background:var(--badbg);border-color:var(--bad)}
+.opt:disabled{cursor:default;color:var(--ink)}
+.prog{height:6px;background:var(--line);border-radius:3px;overflow:hidden;margin-bottom:6px}.prog div{height:100%;background:var(--acc)}
+.meta{color:var(--mut);font-size:.9rem;display:flex;justify-content:space-between}
+.fb{margin:6px 0 14px;font-weight:700}
+.score{font-size:2.4rem;font-weight:700;margin:6px 0}
+.wrong{border-left:4px solid var(--bad);padding-left:12px;margin:10px 0}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<main>
+<h1>Geschiedenis: begrippen en ABC-vragen</h1>
+<p class="sub">Hoofdstuk 1 Jagers &amp; boeren · 2 Grieken &amp; Romeinen · 3 Monniken &amp; ridders</p>
+<div class="tabs" role="tablist"><button class="tab" role="tab" id="t1" aria-selected="true">Leren</button><button class="tab" role="tab" id="t2" aria-selected="false">Oefenen</button></div>
 
+<section id="learn">
+<div class="bar" id="lf"></div>
+<input type="search" id="s" placeholder="Zoek een begrip" aria-label="Zoek een begrip">
+<div class="bar"><button class="chip" id="hideb" aria-pressed="false">Uitleg verbergen (zelf testen)</button></div>
+<div id="list"></div>
+<p class="sub">Begrippen met “eigen uitleg” stonden niet in de begrippenlijst van je boek; die uitleg is zelf geschreven. Check ze even in je boek.</p>
+</section>
+
+<section id="prac" hidden>
+<div id="setup">
+<p>Kies hoofdstukken en hoeveel vragen je wilt.</p>
+<div class="bar" id="pf"></div>
+<div class="bar" id="pn"></div>
+<button class="btn" id="go">Start oefenen</button>
+</div>
+<div id="quiz" hidden>
+<div class="prog"><div id="pb"></div></div>
+<div class="meta"><span id="pc"></span><span id="ps"></span></div>
+<p class="q" id="qt"></p>
+<div id="opts"></div>
+<div class="fb" id="fb" aria-live="polite"></div>
+<button class="btn" id="next" hidden>Volgende vraag</button>
+</div>
+<div id="end" hidden></div>
+</section>
+</main>
+<script>
+const TD=`1|geschreven bron|Bron die uit een tekst bestaat
+1|jager-verzamelaar|Iemand die leeft van jacht en voedsel verzamelen in de natuur
+1|grotschildering|Afbeelding geschilderd op de wand van een grot
+1|heilige plaats|Plek met een bijzondere betekenis voor gelovigen, bijvoorbeeld omdat ze denken dat daar een god aanwezig is
+1|goden|Eeuwig levende, bovenmenselijke, almachtige wezens die vereerd worden
+1|godin|Vrouwelijke god
+1|vruchtbaarheid*|Het vermogen om kinderen te krijgen (nieuw leven voort te brengen)
+1|opgraving|Onderzoek in de bodem dat door een archeoloog wordt gedaan
+1|grafgift|Iets wat aan een dode wordt meegegeven in zijn graf
+1|aardewerk|Uit gebakken klei gemaakte schalen, vazen, schotels en borden
+1|hiernamaals|Leven na de dood (hemel en hel zijn voorbeelden)
+1|Prehistorie|Eerste periode van de mensheid, tot ca. 3000 v.C.; er bestaan geen geschreven bronnen
+1|hunebed|Uit grote zwerfstenen opgebouwde grafkamer uit de Prehistorie
+1|schrift|Tekens op papier of steen waarmee woorden worden voorgesteld
+1|landbouw|Gebruik van grond om aan voedsel te komen: akkers of vee
+1|ambacht|Handwerk waarmee iemand in een klein eigen bedrijf een product maakt
+1|hiërogliefen|Schrift van het oude Egypte
+1|ontcijferen|Onleesbaar schrift leesbaar maken
+1|godsdienst|Geloof in één of meer goden en verering van die god of goden
+1|vorst*|Heerser over een land of rijk, zoals een koning of farao
+1|farao|Vorst in het oude Egypte, van wie werd gedacht dat hij goddelijk was
+1|wet*|Regel die in een land geldt
+1|ambtenaar|Iemand die in dienst van de staat of een vorst werkt
+1|bestuur|Leiding geven aan een land of bedrijf
+1|priester|Iemand die contact met de goden onderhoudt, bijvoorbeeld door offers te brengen
+1|eeuwig|Altijddurend, zonder begin of einde
+1|bron|Voorwerp of tekst waaruit je iets over het verleden kunt weten
+1|dodenboek|Egyptisch document over wat er na de dood zou gebeuren
+1|papyrus|Rietplant waarvan in het oude Egypte papier werd gemaakt
+1|zonde*|Iets slechts wat je volgens je geloof niet had mogen doen
+1|symbool|Teken dat voor iets anders staat, bijvoorbeeld het kruis voor het christendom
+1|balsemen|Een lijk met zalf of hars behandelen zodat het niet bederft
+1|mummie|Gebalsemd lijk dat in textiel is gewikkeld
+1|piramide|Groot grafmonument voor een farao, met vierkant grondvlak en driehoekige zijden
+2|tempel|Gebouw waarin een god of goden vereerd worden
+2|oppergod|Belangrijkste god, de baas over de andere goden
+2|beeldhouwkunst|Beelden maken uit steen, of uit klei en ze daarna in brons gieten
+2|kritisch|Zelf nadenken en een oordeel vormen in plaats van zomaar napraten
+2|kunst|Beelden, schilderijen en gebouwen die gemaakt zijn om mooi gevonden te worden
+2|klassiek|Iets wat vaak wordt nagedaan, zoals de kunst van Grieken en Romeinen
+2|stijl|Het gebruiken van bepaalde vormen en kleuren in de kunst
+2|betrouwbare kennis|Kennis die klopt en waarop je kunt vertrouwen
+2|wetenschap*|Systematisch onderzoek om betrouwbare kennis te krijgen
+2|filosoof|Denker die wetenschappelijk nadenkt over kennis en wijsheid (‘vriend van wijsheid’)
+2|provincie|Door de Romeinen veroverd gebied buiten Italië
+2|cultuur|Alles wat mensen bedenken: gewoonten, wat ze mooi vinden, hun geloof
+2|almachtig|Macht hebben zonder grenzen: alles kunnen
+2|afgod|God die door anderen als ‘geen echte god’ wordt gezien
+2|opstand|Groot oproer om het bestuur af te zetten
+2|profeet|Iemand die zegt dat hij een boodschapper van God of de goden is
+2|gouverneur|Bestuurder die namens de regering een provincie of kolonie bestuurt
+2|kruisigen|Doodstraf van de Romeinen: aan twee gekruiste planken hangen tot je dood was
+2|wreed*|Hard en zonder medelijden
+2|slaaf|Mens die het eigendom van een ander is en dus verkocht kan worden
+2|volgeling*|Aanhanger van een leider of een leer
+2|offer|Geschenk aan God of de goden om iets te vragen of om te vereren
+2|gezalfde|Iemand die door God is uitgekozen (door ‘zalving’)
+2|apostel|Verkondiger van het christendom; de eerste waren de twaalf leerlingen van Jezus
+2|christendom|Godsdienst van de volgelingen van Jezus Christus
+2|jodendom|Oudste nog bestaande godsdienst met één god
+2|wegennet*|Alle wegen en verbindingen in een gebied
+3|missionaris|Iemand die wordt uitgestuurd om de christelijke godsdienst te verspreiden
+3|monnik|Man die zijn hele leven aan het christelijk geloof wijdt en in een klooster woont
+3|paus|Hoofd van de rooms-katholieke kerk, met als woonplaats Rome
+3|bisschop|Hogere geestelijke in de rooms-katholieke kerk die een gebied leidt
+3|kerstenen|Mensen tot het christendom laten overgaan
+3|dopen|Onderdompelen in water; zo word je lid van de christelijke gemeenschap
+3|organiseren|Iets zo regelen dat mensen goed samenwerken
+3|bisdom|Gebied waar een bisschop de baas is over de katholieken
+3|parochie|Groep christenen bij één kerkgebouw, met een eigen priester
+3|reliek|Overblijfsel van een heilige, vaak een stukje bot
+3|heilige|Bijzonder mens die opvalt door zijn voorbeeldige leven en goede daden
+3|Bijbel|Heilig boek van het christendom (Oude en Nieuwe Testament)
+3|hemel|Paradijs: plaats waar goede gelovigen na hun dood terechtkomen
+3|hel|Onderwereld waar zondaars na hun dood terechtkomen
+3|klooster|Groot gebouw waar monniken (of nonnen) samenwonen
+3|non|Vrouwelijke monnik
+3|edele|Grondbezitter met voorrechten boven het gewone volk
+3|islam|Godsdienst van Mohammed; betekent ‘onderwerping’
+3|nomade|Iemand die rondtrekt zonder vaste woonplaats
+3|handelaar|Iemand die handel drijft (koopman)
+3|karavaan|Groep mensen met ezels of kamelen die samen goederen vervoeren
+3|moslim|Aanhanger van de islam
+3|jihad|Strijd tegen ongeloof door moslims; ook heilige oorlog genoemd`;
+const FD=`1|Wat gebeurde er in 10 000 v.C.?|De landbouw werd uitgevonden
+1|Wat gebeurde er in 3500 v.C.?|Het schrift werd uitgevonden
+1|Wie was Toetanchamon?|Farao die 18 jaar werd; zijn bijna onbeschadigde graf werd in 1922 ontdekt
+2|Wat gebeurde er in 241 v.C.?|De Romeinen veroverden hun eerste provincie; er kwam een grote stroom slaven op gang
+2|Wat gebeurde er in 392 n.C.?|Alle andere godsdiensten dan het christendom werden verboden
+2|Wie was Hippokrates?|Griekse arts die de oorzaak van ziekte in de natuur zocht en niet bij de goden
+2|Wie was Sokrates?|Griekse filosoof die kritische vragen stelde en een beker gif moest drinken
+2|Wie was Paulus van Tarsus?|Apostel en belangrijkste stichter van het christendom
+2|Wie was Constantijn?|Romeinse keizer (r. 306–337) die voor de christenen koos
+2|Wie was Jezus van Nazareth?|Man naar wie het christendom is genoemd; zijn volgelingen zagen hem als zoon van God
+3|Wat gebeurde er in 622?|Mohammed vluchtte naar Medina: begin van de verspreiding van de islam
+3|Wat gebeurde er in 863?|Vikingaanval op Dorestad maakte een einde aan de handel daar; meer autarkie
+3|Wie was Willibrord?|Engelse missionaris, door de paus benoemd tot bisschop van de Friezen
+3|Wie was Bonifatius?|Missionaris die Friezen doopte en door Friezen werd vermoord
+3|Wie was Mohammed?|Profeet van de islam (ca. 570–632)`;
+const pr=s=>s.split("\n").map(l=>l.split("|"));
+const T=pr(TD).map(([c,t,d])=>({c:+c,t:t.replace("*",""),own:t.includes("*"),d}));
+const F=pr(FD).map(([c,q,a])=>({c:+c,q,a,w:q.startsWith("Wie")}));
+const $=id=>document.getElementById(id);
+const sh=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
+const NAMES={0:"Alles",1:"Hoofdstuk 1",2:"Hoofdstuk 2",3:"Hoofdstuk 3"};
+function chips(el,multi,get,set){
+  el.innerHTML="";
+  [0,1,2,3].forEach(k=>{const b=document.createElement("button");b.className="chip";b.textContent=NAMES[k];
+    b.setAttribute("aria-pressed",String(get(k)));
+    b.onclick=()=>{set(k);chips(el,multi,get,set)};el.appendChild(b)});
+}
+// Leren
+let lf=0,hideOn=false;
+function renderList(){
+  const q=$("s").value.trim().toLowerCase();
+  const a=T.filter(x=>(!lf||x.c===lf)&&(!q||x.t.toLowerCase().includes(q)||x.d.toLowerCase().includes(q)));
+  $("list").innerHTML="";
+  if(!a.length){$("list").textContent="Geen begrip gevonden. Probeer een ander zoekwoord.";return}
+  a.forEach(x=>{const r=document.createElement("button");r.className="row"+(hideOn?" hide":"");
+    r.innerHTML=`<span class="ch">H${x.c}</span><b></b>${x.own?'<span class="own">eigen uitleg</span>':""}<div class="d"></div>`;
+    r.querySelector("b").textContent=x.t;r.querySelector(".d").textContent=x.d;
+    if(hideOn)r.onclick=()=>r.classList.toggle("open");
+    $("list").appendChild(r)});
+}
+function lchips(){chips($("lf"),false,k=>lf===k,k=>{lf=k;renderList()})}
+lchips();renderList();
+$("s").oninput=renderList;
+$("hideb").onclick=e=>{hideOn=!hideOn;e.target.setAttribute("aria-pressed",String(hideOn));renderList()};
+// Tabs
+function tab(n){$("learn").hidden=n!==1;$("prac").hidden=n!==2;
+  $("t1").setAttribute("aria-selected",String(n===1));$("t2").setAttribute("aria-selected",String(n===2))}
+$("t1").onclick=()=>tab(1);$("t2").onclick=()=>tab(2);
+// Oefenen
+let pf=0,pn=10,qs=[],qi=0,score=0,wrong=[],done=false;
+function setupUI(){
+  chips($("pf"),false,k=>pf===k,k=>{pf=k;setupUI()});
+  $("pn").innerHTML="";
+  [10,20,0].forEach(n=>{const b=document.createElement("button");b.className="chip";b.textContent=n?n+" vragen":"Alle vragen";
+    b.setAttribute("aria-pressed",String(pn===n));b.onclick=()=>{pn=n;setupUI()};$("pn").appendChild(b)});
+}
+setupUI();
+function mk(it){
+  if(it.t!==undefined){
+    const rev=Math.random()<.4,x=it;
+    const pool=T.filter(y=>y!==x).map(y=>rev?y.t:y.d);
+    return {q:rev?`Welk begrip hoort bij: “${x.d}”?`:`Wat betekent “${x.t}”?`,a:rev?x.t:x.d,pool,ex:`${x.t}: ${x.d}`};
+  }
+  return {q:it.q,a:it.a,pool:F.filter(y=>y!==it&&y.w===it.w).map(y=>y.a),ex:it.a};
+}
+function start(list){
+  qs=sh(list).map(mk);qi=0;score=0;wrong=[];
+  $("setup").hidden=true;$("end").hidden=true;$("quiz").hidden=false;show();
+}
+$("go").onclick=()=>{
+  let l=[...T,...F].filter(x=>!pf||x.c===pf);
+  l=sh(l);if(pn)l=l.slice(0,pn);start(l);
+};
+function show(){
+  const q=qs[qi];done=false;
+  $("pc").textContent=`Vraag ${qi+1} van ${qs.length}`;$("ps").textContent=`Goed: ${score}`;
+  $("pb").style.width=(qi/qs.length*100)+"%";
+  $("qt").textContent=q.q;$("fb").textContent="";$("next").hidden=true;
+  const seen=new Set([q.a]);const d=[];
+  for(const p of sh(q.pool)){if(!seen.has(p)){seen.add(p);d.push(p);if(d.length===2)break}}
+  q.o=sh([q.a,...d]);
+  $("opts").innerHTML="";
+  q.o.forEach((t,i)=>{const b=document.createElement("button");b.className="opt";
+    b.innerHTML=`<i>${"ABC"[i]}</i><span></span>`;b.lastChild.textContent=t;
+    b.onclick=()=>pick(i);$("opts").appendChild(b)});
+}
+function pick(i){
+  if(done)return;done=true;const q=qs[qi],bs=$("opts").children;
+  [...bs].forEach((b,j)=>{b.disabled=true;if(q.o[j]===q.a)b.classList.add("ok")});
+  if(q.o[i]===q.a){score++;$("fb").textContent="Goed!";$("fb").style.color="var(--ok)"}
+  else{bs[i].classList.add("no");wrong.push(q);$("fb").textContent="Fout. Het juiste antwoord staat in het groen.";$("fb").style.color="var(--bad)"}
+  $("ps").textContent=`Goed: ${score}`;
+  $("next").textContent=qi===qs.length-1?"Bekijk resultaat":"Volgende vraag";$("next").hidden=false;$("next").focus();
+}
+$("next").onclick=()=>{qi++;qi<qs.length?show():finish()};
+document.addEventListener("keydown",e=>{
+  if($("quiz").hidden)return;const k=e.key.toLowerCase();
+  if("abc".includes(k)&&k.length===1&&!done)pick("abc".indexOf(k));
+  else if(e.key==="Enter"&&done&&!$("next").hidden)$("next").click();
+});
+function finish(){
+  $("quiz").hidden=true;const e=$("end");e.hidden=false;
+  const p=Math.round(score/qs.length*100);
+  e.innerHTML=`<p class="meta">Resultaat</p><div class="score">${score} van ${qs.length} goed (${p}%)</div><p>${p>=90?"Sterk. Je kunt dit.":p>=70?"Bijna er. Oefen de fouten nog een keer.":"Nog even oefenen. Begin bij de fouten hieronder."}</p>`;
+  wrong.forEach(q=>{const d=document.createElement("div");d.className="wrong";d.textContent=q.ex;e.appendChild(d)});
+  const bar=document.createElement("div");bar.className="bar";
+  if(wrong.length){const b=document.createElement("button");b.className="btn";b.textContent="Oefen de fouten opnieuw";
+    b.onclick=()=>{qs=sh(wrong.map(w=>({...w})));qi=0;score=0;wrong=[];e.hidden=true;$("quiz").hidden=false;show()};bar.appendChild(b)}
+  const r=document.createElement("button");r.className="btn alt";r.textContent="Nieuwe ronde";
+  r.onclick=()=>{e.hidden=true;$("setup").hidden=false};bar.appendChild(r);e.appendChild(bar);
+}
+</script>
+</body>
+</html>
