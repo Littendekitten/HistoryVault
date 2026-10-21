@@ -64,6 +64,8 @@ input[type=search]{width:100%;padding:11px 14px;border:1.5px solid var(--line);b
 <div class="bar" id="pf"></div>
 <div class="bar" id="pn"></div>
 <button class="btn" id="go">Start oefenen</button>
+<p style="margin-top:22px"><b>Toets met cijfer</b><br><span class="sub">Alle vragen van het hoofdstuk, in willekeurige volgorde. Aan het eind krijg je een cijfer van 1 t/m 10.</span></p>
+<div class="bar"><button class="btn alt tq" data-c="1">Toets H1</button><button class="btn alt tq" data-c="2">Toets H2</button><button class="btn alt tq" data-c="3">Toets H3</button><button class="btn alt tq" data-c="0">Toets alles</button></div>
 </div>
 <div id="quiz" hidden>
 <div class="prog"><div id="pb"></div></div>
@@ -210,7 +212,7 @@ function tab(n){$("learn").hidden=n!==1;$("prac").hidden=n!==2;
   $("t1").setAttribute("aria-selected",String(n===1));$("t2").setAttribute("aria-selected",String(n===2))}
 $("t1").onclick=()=>tab(1);$("t2").onclick=()=>tab(2);
 // Oefenen
-let pf=0,pn=10,qs=[],qi=0,score=0,wrong=[],done=false;
+let pf=0,pn=10,qs=[],qi=0,score=0,wrong=[],done=false,retry=false;
 function setupUI(){
   chips($("pf"),false,k=>pf===k,k=>{pf=k;setupUI()});
   $("pn").innerHTML="";
@@ -227,9 +229,10 @@ function mk(it){
   return {q:it.q,a:it.a,pool:F.filter(y=>y!==it&&y.w===it.w).map(y=>y.a),ex:it.a};
 }
 function start(list){
-  qs=sh(list).map(mk);qi=0;score=0;wrong=[];
+  qs=sh(list).map(mk);qi=0;score=0;wrong=[];retry=false;
   $("setup").hidden=true;$("end").hidden=true;$("quiz").hidden=false;show();
 }
+document.querySelectorAll(".tq").forEach(b=>b.onclick=()=>start([...T,...F].filter(x=>+b.dataset.c===0||x.c===+b.dataset.c)));
 $("go").onclick=()=>{
   let l=[...T,...F].filter(x=>!pf||x.c===pf);
   l=sh(l);if(pn)l=l.slice(0,pn);start(l);
@@ -264,11 +267,11 @@ document.addEventListener("keydown",e=>{
 function finish(){
   $("quiz").hidden=true;const e=$("end");e.hidden=false;
   const p=Math.round(score/qs.length*100);
-  e.innerHTML=`<p class="meta">Resultaat</p><div class="score">${score} van ${qs.length} goed (${p}%)</div><p>${p>=90?"Sterk. Je kunt dit.":p>=70?"Bijna er. Oefen de fouten nog een keer.":"Nog even oefenen. Begin bij de fouten hieronder."}</p>`;
+  e.innerHTML=`<p class="meta">Resultaat</p>${retry?"":`<div class="score">Cijfer: ${(1+9*score/qs.length).toFixed(1).replace(".",",")}</div>`}<p>${score} van ${qs.length} goed (${p}%)</p><p>${p>=90?"Sterk. Je kunt dit.":p>=70?"Bijna er. Oefen de fouten nog een keer.":"Nog even oefenen. Begin bij de fouten hieronder."}</p>`;
   wrong.forEach(q=>{const d=document.createElement("div");d.className="wrong";d.textContent=q.ex;e.appendChild(d)});
   const bar=document.createElement("div");bar.className="bar";
   if(wrong.length){const b=document.createElement("button");b.className="btn";b.textContent="Oefen de fouten opnieuw";
-    b.onclick=()=>{qs=sh(wrong.map(w=>({...w})));qi=0;score=0;wrong=[];e.hidden=true;$("quiz").hidden=false;show()};bar.appendChild(b)}
+    b.onclick=()=>{qs=sh(wrong.map(w=>({...w})));qi=0;score=0;wrong=[];retry=true;e.hidden=true;$("quiz").hidden=false;show()};bar.appendChild(b)}
   const r=document.createElement("button");r.className="btn alt";r.textContent="Nieuwe ronde";
   r.onclick=()=>{e.hidden=true;$("setup").hidden=false};bar.appendChild(r);e.appendChild(bar);
 }
